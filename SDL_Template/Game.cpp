@@ -35,10 +35,21 @@ void Game::MouseMotion(const int& x, const int& y)
 	m_board->MouseMotion(x, y);
 }
 
-void Game::MouseButtonDown(const int& x, const int& y)
+void Game::MouseButtonDown(Vector2 mousePos)
 {
-	m_board->MouseButtonDown({x, y});
+	Tile* tile = m_board->GetTile(mousePos);
+	Piece* p = tile->GetOccupyingPiece();
 
+	if (!tile->IsHighlighted()) {
+		if (p != nullptr && !IsCorrectTurn(p)) return;
+	}
+
+	if (m_board->MouseButtonDown(mousePos)) m_whiteToPlay = !m_whiteToPlay;
+
+}
+
+bool Game::IsCorrectTurn(Piece* p) {
+	return ((p->GetPieceColor() == White && m_whiteToPlay) || (p->GetPieceColor() == Black && !m_whiteToPlay));
 }
 
 void Game::InitPieces()

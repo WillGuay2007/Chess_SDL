@@ -17,6 +17,7 @@ public:
 	virtual std::vector<GridPosition> GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt) = 0;
 	void ChangePosition(GridPosition newPos);
 	bool IsEnemy(PieceColor _color) { return color != _color; }
+	PieceColor GetPieceColor() { return color; }
 protected:
 	PieceColor color;
 };

@@ -5,6 +5,7 @@ class Pawn : public Piece
 public:
 	Pawn(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color);
 	~Pawn() = default;
+	void Promote();
 	std::vector<GridPosition> GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt) override;
 };
 

@@ -81,7 +81,8 @@ void Board::ResetHighlight() {
 	}
 }
 
-void Board::MouseButtonDown(Vector2 mousePos)
+//Je retourne true si une piece bouge.
+bool Board::MouseButtonDown(Vector2 mousePos)
 {
 	Tile* tile = GetTile(mousePos);
 
@@ -96,18 +97,20 @@ void Board::MouseButtonDown(Vector2 mousePos)
 		}
 		tile->AssignPiece(m_selectedPiece);
 		ResetHighlight();
-		m_selectedPiece = nullptr; //Mon choix de design.
+		m_selectedPiece = nullptr;
+		return true;
 	}
 	else {
 		Piece* piece = tile->GetOccupyingPiece();
 		if (piece == nullptr) {
 			ResetHighlight();
 			m_selectedPiece = nullptr; //Mon choix de design.
-			return;
+			return false;
 		}
 		ResetHighlight();
 		m_selectedPiece = piece;
 		SetLegalMovesHighlight(piece);
+		return false;
 	}
 }
 

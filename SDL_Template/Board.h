@@ -17,7 +17,7 @@ public:
 
 	void MouseMotion(const int x, const int y);
 	void ResetHighlight();
-	void MouseButtonDown(Vector2 mousePos);
+	bool MouseButtonDown(Vector2 mousePos);
 	void AssignPiece(GridPosition pos, Piece* piece);
 	void SetLegalMovesHighlight(Piece* p);
 	Tile* GetTile(GridPosition pos) { return m_tiles[pos.row][pos.column]; }

@@ -7,6 +7,10 @@ Pawn::Pawn(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color)
     if (color == Black) SetTint(0, 0, 0);
 }
 
+void Pawn::Promote()
+{
+}
+
 std::vector<GridPosition> Pawn::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt)
 {
     GridPosition pawnPosition = GetGridPosition();

@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 	}
 
 	SDL_Window* win = SDL_CreateWindow(
-		"Space Invaders",
+		"Chess",
 		SDL_WINDOWPOS_CENTERED, 
 		SDL_WINDOWPOS_CENTERED,
 		WINDOW_WIDTH,
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 			{
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				game->MouseButtonDown(x, y);
+				game->MouseButtonDown({x, y});
 			}
 		}
 
