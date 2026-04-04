@@ -22,8 +22,8 @@ public:
 	void SetGridPosition(const GridPosition newGridPosition) { SetPosition(newGridPosition * TILE_SIZE); }
 	void SetGridPositionCenter(const GridPosition newGridPosition) { SetPositionCenter(newGridPosition * TILE_SIZE); }
 	void Translate(Vector2 offset) { m_Rect.x += offset.x; m_Rect.y += offset.y; }
-
 	void SetSize(Size newSize) { m_Rect.w = newSize.width; m_Rect.h = newSize.height; }
+	void SetTint(int r, int g, int b) { SDL_SetTextureColorMod(m_texture, r, g, b); }
 
 	Vector2 GetPosition() { return Vector2(m_Rect.x, m_Rect.y); }
 	Vector2 GetCenterPosition() { return Vector2(m_Rect.x + m_Rect.w / 2, m_Rect.y + m_Rect.h / 2); }
@@ -33,6 +33,6 @@ public:
 private:
 	SDL_Renderer* m_renderer;
 	SDL_Rect m_Rect;
-	SDL_Texture* m_Texture;
+	SDL_Texture* m_texture;
 };
 

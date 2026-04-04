@@ -16,6 +16,7 @@ struct GridPosition {
 	GridPosition(Vector2 position) : column(position.x / TILE_SIZE), row(position.y / TILE_SIZE) {}
 	GridPosition() = default;
 	Vector2 operator*(const int multiplicator) const { return { column * multiplicator, row * multiplicator }; }
+	GridPosition operator+ (const GridPosition pos) const { return {column + pos.column, row + pos.row}; }
 	int row;
 	int column;
 };
