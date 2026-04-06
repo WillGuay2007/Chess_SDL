@@ -17,6 +17,7 @@ public:
 	void MouseMotion(const int& x, const int& y);
 	void MouseButtonDown(Vector2 mousePos);
 	bool IsCorrectTurn(Piece* p);
+	bool KingIsInCheck(Piece* king);
 	void InitPieces();
 
 private:
@@ -24,5 +25,7 @@ private:
 	SDL_Renderer* m_Renderer;
 	Board* m_board;
 	PieceFactory* m_pieceFactory;
+	Piece* m_whiteKing;
+	Piece* m_blackKing;
 };
 

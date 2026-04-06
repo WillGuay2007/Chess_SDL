@@ -8,6 +8,7 @@ class Tile : public Sprite
 {
 public:
 	Tile(SDL_Renderer* renderer, Vector2 pos);
+	~Tile();
 
 	Piece* GetOccupyingPiece() { return m_occupyingPiece; }
 	void RemoveOccupyingPiece() { m_occupyingPiece = nullptr; }

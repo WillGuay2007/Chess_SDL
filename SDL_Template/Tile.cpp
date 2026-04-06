@@ -10,8 +10,16 @@ Tile::Tile(SDL_Renderer* renderer, Vector2 pos)
 	ResetTexture();
 }
 
+Tile::~Tile()
+{
+	if (m_occupyingPiece == nullptr) return;
+	delete m_occupyingPiece;
+	m_occupyingPiece = nullptr;
+}
+
 bool Tile::IsBlack() {
-	return (GetGridPosition().column + GetGridPosition().row) % 2 == 0;
+	GridPosition pos = (GridPosition)GetPosition();
+	return (pos.column + pos.row) % 2 == 0;
 }
 
 bool Tile::IsHighlighted()
@@ -43,7 +51,7 @@ void Tile::ResetTexture()
 
 void Tile::ShowIndex()
 {
-	GridPosition pos = GetGridPosition();
+	GridPosition pos = (GridPosition)GetPosition();
 
 	std::cout << pos.column << " - " << pos.row << std::endl;
 }

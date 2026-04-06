@@ -12,13 +12,13 @@ Sprite::Sprite(SDL_Renderer* renderer, int x, int y, int w, int h)
 	m_Rect.h = h;
 }
 
-Sprite::Sprite(SDL_Renderer* renderer, GridPosition gridPos, Size size)
+Sprite::Sprite(SDL_Renderer* renderer, GridPosition gridPos, Size size, int tileSize)
 	: m_texture(nullptr)
 	, m_Rect(SDL_Rect())
 	, m_renderer(renderer)
 {
 	SetSize(size);
-	SetGridPosition(gridPos);
+	SetPosition(gridPos * tileSize);
 }
 
 Sprite::Sprite(SDL_Renderer* renderer, Vector2 pos, Size size)

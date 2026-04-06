@@ -1,19 +1,19 @@
 #include "Pawn.h"
 
-Pawn::Pawn(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color) 
-    : Piece(renderer, piecePosition, color)
+Pawn::Pawn(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color, int tileSize) 
+    : Piece(renderer, piecePosition, color, tileSize)
 {
     LoadTexture("assets/pawn.png");
-    if (color == Black) SetTint(0, 0, 0);
+    if (color == Black) SetTint(50, 50, 50);
 }
 
 void Pawn::Promote()
 {
 }
 
-std::vector<GridPosition> Pawn::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt)
+std::vector<GridPosition> Pawn::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt, std::function<bool(GridPosition, PieceColor)> isTileAttacked)
 {
-    GridPosition pawnPosition = GetGridPosition();
+    GridPosition pawnPosition = (GridPosition)GetPosition();
 
     //Basic pawn push.
     std::vector<GridPosition> legalMoves;
@@ -34,4 +34,10 @@ std::vector<GridPosition> Pawn::GetLegalMoves(std::function<Piece* (GridPosition
     if (getPieceAt(DiagonalLeft) != nullptr && getPieceAt(DiagonalLeft)->IsEnemy(color)) legalMoves.push_back(DiagonalLeft);
 
     return legalMoves;
+}
+
+std::vector<GridPosition> Pawn::GetAttackedSquares(std::function<Piece* (GridPosition)> getPieceAt)
+{
+    GridPosition pawnPosition = (GridPosition)GetPosition();
+    return { pawnPosition + GridPosition(1,color), pawnPosition + GridPosition(-1,color) };
 }

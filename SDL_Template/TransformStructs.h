@@ -17,6 +17,7 @@ struct GridPosition {
 	GridPosition() = default;
 	Vector2 operator*(const int multiplicator) const { return { column * multiplicator, row * multiplicator }; }
 	GridPosition operator+ (const GridPosition pos) const { return {column + pos.column, row + pos.row}; }
+	bool operator== (const GridPosition pos) const { return (pos.column == column && pos.row == row); }
 	int row;
 	int column;
 };

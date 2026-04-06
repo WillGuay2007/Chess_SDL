@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Board.h"
-#include "Piece.h"
 #include "Tile.h"
 
 Board::Board(SDL_Renderer* renderer)
@@ -54,7 +53,7 @@ void Board::Draw()
 	}
 }
 
-bool FilterTile(GridPosition pos) {
+bool Board::FilterTile(GridPosition pos) {
 	return (pos.row >= 0 && pos.row < 8 && pos.column >= 0 && pos.column < 8);
 }
 
@@ -71,7 +70,7 @@ void Board::MouseMotion(const int x, const int y)
 
 }
 
-void Board::ResetHighlight() {
+void Board::ResetHighlights() {
 	for (int i = 0; i < m_tiles.size(); i++)
 	{
 		for (int j = 0; j < m_tiles[i].size(); j++)
@@ -88,7 +87,7 @@ bool Board::MouseButtonDown(Vector2 mousePos)
 
 	if (tile->IsHighlighted()) {
 		GetTile(m_selectedPiece->GetPosition())->RemoveOccupyingPiece();
-		m_selectedPiece->ChangePosition(tile->GetGridPosition());
+		m_selectedPiece->SetPosition(tile->GetPosition());
 		if (tile->GetOccupyingPiece() != nullptr) {
 			Piece* p = tile->GetOccupyingPiece();
 			tile->RemoveOccupyingPiece();
@@ -96,18 +95,18 @@ bool Board::MouseButtonDown(Vector2 mousePos)
 			p = nullptr;
 		}
 		tile->AssignPiece(m_selectedPiece);
-		ResetHighlight();
+		ResetHighlights();
 		m_selectedPiece = nullptr;
 		return true;
 	}
 	else {
 		Piece* piece = tile->GetOccupyingPiece();
 		if (piece == nullptr) {
-			ResetHighlight();
+			ResetHighlights();
 			m_selectedPiece = nullptr; //Mon choix de design.
 			return false;
 		}
-		ResetHighlight();
+		ResetHighlights();
 		m_selectedPiece = piece;
 		SetLegalMovesHighlight(piece);
 		return false;
@@ -117,8 +116,30 @@ bool Board::MouseButtonDown(Vector2 mousePos)
 void Board::AssignPiece(GridPosition pos, Piece* piece)
 {
 	Tile* tile = GetTile(pos);
-	if (tile->GetOccupyingPiece() != nullptr) return;
+	if (tile->GetOccupyingPiece() != nullptr) {
+		std::cout << "A piece is already occupying the square. Assign failed.\n";
+	}
 	tile->AssignPiece(piece);
+}
+
+bool Board::IsSquareAttacked(GridPosition pos, PieceColor pieceColor) {
+	auto getPieceAt = [this](GridPosition pos) -> Piece* {
+		if (FilterTile(pos) == false) return nullptr;
+		return GetTile(pos)->GetOccupyingPiece();
+		};
+	if (FilterTile(pos) == false) return true;
+	for (int i = 0; i < m_tiles.size(); i++) {
+		for (int j = 0; j < m_tiles[i].size(); j++) {
+			Tile* t = m_tiles[i][j];
+			Piece* p = t->GetOccupyingPiece();
+			if (p == nullptr) continue;
+			if (p->GetPieceColor() == pieceColor) continue;
+			for (GridPosition _pos : p->GetAttackedSquares(getPieceAt)) {
+				if (_pos == pos) return true;
+			}
+		}
+	}
+	return false;
 }
 
 void Board::SetLegalMovesHighlight(Piece* p) {
@@ -127,7 +148,10 @@ void Board::SetLegalMovesHighlight(Piece* p) {
 			if (FilterTile(pos) == false) return nullptr;
 			return GetTile(pos)->GetOccupyingPiece();
 		};
-		std::vector<GridPosition> legalMoves = p->GetLegalMoves(getPieceAt);
+		auto isSquareAttacked = [this](GridPosition pos, PieceColor pieceColor) -> bool {
+			return IsSquareAttacked(pos, pieceColor);
+		};
+		std::vector<GridPosition> legalMoves = p->GetLegalMoves(getPieceAt, isSquareAttacked);
 		legalMoves = FilterInvalidTiles(legalMoves);
 		for (GridPosition pos : legalMoves) {
 			Tile* tile = GetTile(pos);
