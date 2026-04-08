@@ -109,6 +109,7 @@ bool Board::MouseButtonDown(Vector2 mousePos)
 		ResetHighlights();
 		m_selectedPiece = piece;
 		SetLegalMovesHighlight(piece);
+		GetTile(piece->GetPosition())->SetSelectionColor();
 		return false;
 	}
 }

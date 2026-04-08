@@ -14,6 +14,7 @@ public:
 	void RemoveOccupyingPiece() { m_occupyingPiece = nullptr; }
 	void AssignPiece(Piece* piece);
 	void Highlight();
+	void SetSelectionColor();
 	void ResetTexture();
 	void ShowIndex();
 	bool IsBlack();

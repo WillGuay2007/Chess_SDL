@@ -43,6 +43,11 @@ void Tile::Highlight()
 	if (IsBlack()) { SetTint(200, 100, 100); } else { SetTint(255, 128, 128); };
 }
 
+void Tile::SetSelectionColor()
+{
+	SetTint(100, 200, 200);
+}
+
 void Tile::ResetTexture()
 {
 	m_isHighlighted = false;

@@ -79,4 +79,34 @@ void Game::InitPieces()
 	m_whiteKing = m_pieceFactory->CreateKing({ 4, 7 }, White, TILE_SIZE);
 	m_board->AssignPiece(m_whiteKing->GetPosition(), m_whiteKing);
 
+	//Knights
+	for (int i = 1; i <= 6; i = i + 5) {
+		for (int j = 0; j <= 1; j++) {
+			Piece* knight = m_pieceFactory->CreateKnight({ i, j * 7 }, j == 0 ? Black : White, TILE_SIZE);
+			m_board->AssignPiece(knight->GetPosition(), knight);
+		}
+	}
+
+	//Bishops
+	for (int i = 2; i <= 5; i = i + 3) {
+		for (int j = 0; j <= 1; j++) {
+			Piece* bishop = m_pieceFactory->CreateBishop({ i, j * 7 }, j == 0 ? Black : White, TILE_SIZE);
+			m_board->AssignPiece(bishop->GetPosition(), bishop);
+		}
+	}
+
+	//Rooks
+	for (int i = 0; i <= 7; i = i + 7) {
+		for (int j = 0; j <= 1; j++) {
+			Piece* rook = m_pieceFactory->CreateRook({ i, j * 7 }, j == 0 ? Black : White, TILE_SIZE);
+			m_board->AssignPiece(rook->GetPosition(), rook);
+		}
+	}
+
+	//Queens
+	for (int i = 0; i <= 1; i++) {
+		Piece* queen = m_pieceFactory->CreateQueen({ 3, i * 7 }, i == 0 ? Black : White, TILE_SIZE);
+		m_board->AssignPiece(queen->GetPosition(), queen);
+	}
+
 }
