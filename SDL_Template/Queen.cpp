@@ -7,21 +7,10 @@ Queen::Queen(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor colo
     if (color == Black) SetTint(50, 50, 50);
 }
 
-std::vector<GridPosition> Queen::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt, std::function<bool(GridPosition, PieceColor)> isTileAttacked)
-{
-    std::vector<GridPosition> possibleMoves = GetAttackedSquares(getPieceAt);
-    std::vector<GridPosition> legalMoves;
-    for (GridPosition pos : possibleMoves) {
-        Piece* p = getPieceAt(pos);
-        if (p != nullptr && p->GetPieceColor() == color) continue;
-        legalMoves.push_back(pos);
-    }
-    return legalMoves;
-}
-
+//Ca retourne une liste des cases que la piece attaque.
 std::vector<GridPosition> Queen::GetAttackedSquares(std::function<Piece* (GridPosition)> getPieceAt)
 {
-    //J'ai juste copié le code du fou et de la tour.
+    //J'ai juste copie le code du fou et de la tour.
     GridPosition queenPosition = GetPosition();
     std::vector<GridPosition> moves;
 

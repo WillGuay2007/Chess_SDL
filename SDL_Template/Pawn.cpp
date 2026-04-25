@@ -7,10 +7,7 @@ Pawn::Pawn(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color,
     if (color == Black) SetTint(50, 50, 50);
 }
 
-void Pawn::Promote()
-{
-}
-
+//Je override parce que le mouvement d'un pion est plus spefifique qu'une piece reguliere. j'ai pas le move "en passant" vu que cetais pas demande
 std::vector<GridPosition> Pawn::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt, std::function<bool(GridPosition, PieceColor)> isTileAttacked)
 {
     GridPosition pawnPosition = (GridPosition)GetPosition();

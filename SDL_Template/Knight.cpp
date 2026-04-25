@@ -1,5 +1,6 @@
 #include "Knight.h"
 
+//C'est le constructeur!
 Knight::Knight(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color, int tileSize)
     : Piece(renderer, piecePosition, color, tileSize)
 {
@@ -7,18 +8,7 @@ Knight::Knight(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor co
     if (color == Black) SetTint(50, 50, 50);
 }
 
-std::vector<GridPosition> Knight::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt, std::function<bool(GridPosition, PieceColor)> isTileAttacked)
-{
-    std::vector<GridPosition> possibleMoves = GetAttackedSquares(getPieceAt);
-    std::vector<GridPosition> legalMoves;
-    for (GridPosition pos : possibleMoves) {
-        Piece* p = getPieceAt(pos);
-        if (p != nullptr && p->GetPieceColor() == color) continue;
-        legalMoves.push_back(pos);
-    }
-    return legalMoves;
-}
-
+//Ca retourne une liste des cases que la piece attaque.
 std::vector<GridPosition> Knight::GetAttackedSquares(std::function<Piece* (GridPosition)> getPieceAt)
 {
     GridPosition knightPosition = GetPosition();

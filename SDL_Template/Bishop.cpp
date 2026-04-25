@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Bishop.h"
 
+//C'est le constructeur (oui en effet  Chaque fonction doit être documentee!)
 Bishop::Bishop(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor color, int tileSize)
     : Piece(renderer, piecePosition, color, tileSize)
 {
@@ -8,18 +9,7 @@ Bishop::Bishop(SDL_Renderer* renderer, GridPosition piecePosition, PieceColor co
     if (color == Black) SetTint(50, 50, 50);
 }
 
-std::vector<GridPosition> Bishop::GetLegalMoves(std::function<Piece* (GridPosition)> getPieceAt, std::function<bool(GridPosition, PieceColor)> isTileAttacked)
-{
-    std::vector<GridPosition> possibleMoves = GetAttackedSquares(getPieceAt);
-    std::vector<GridPosition> legalMoves;
-    for (GridPosition pos : possibleMoves) {
-        Piece* p = getPieceAt(pos);
-        if (p != nullptr && p->GetPieceColor() == color) continue;
-        legalMoves.push_back(pos);
-    }
-    return legalMoves;
-}
-
+//Ca retourne une liste des cases que la piece attaque.
 std::vector<GridPosition> Bishop::GetAttackedSquares(std::function<Piece* (GridPosition)> getPieceAt)
 {
     GridPosition bishopPosition = GetPosition();
@@ -36,7 +26,6 @@ std::vector<GridPosition> Bishop::GetAttackedSquares(std::function<Piece* (GridP
             moves.push_back(pos);
         }
     }
-    
     
     return moves;
 }

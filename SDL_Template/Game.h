@@ -4,6 +4,8 @@
 #include "Board.h"
 #include "PieceFactory.h"
 
+class King;
+
 class Game
 {
 
@@ -12,12 +14,11 @@ public:
 	~Game();
 
 
-	void Update();
 	void Draw();
-	void MouseMotion(const int& x, const int& y);
+	void MouseMotion(Vector2 mousePos);
 	void MouseButtonDown(Vector2 mousePos);
+	void MouseButtonUp(Vector2 mousePos);
 	bool IsCorrectTurn(Piece* p);
-	bool KingIsInCheck(Piece* king);
 	void InitPieces();
 
 private:
@@ -25,7 +26,8 @@ private:
 	SDL_Renderer* m_Renderer;
 	Board* m_board;
 	PieceFactory* m_pieceFactory;
-	Piece* m_whiteKing;
-	Piece* m_blackKing;
+	King* m_whiteKing;
+	King* m_blackKing;
+	bool m_gameOver = false;
 };
 

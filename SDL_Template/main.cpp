@@ -6,6 +6,7 @@
 
 using namespace std;
 
+//C'est la fonction main! Celle que tu as ecris!
 int main(int argc, char* argv[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING))
@@ -41,12 +42,12 @@ int main(int argc, char* argv[])
 		while (SDL_PollEvent(&e))
 		{
 			//If mouse event happened
-			if (e.type == SDL_MOUSEMOTION )
+			if (e.type == SDL_MOUSEMOTION)
 			{
 				//Get mouse position
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				game->MouseMotion(x, y);
+				game->MouseMotion({x, y});
 				
 			}
 			else if (e.type == SDL_MOUSEBUTTONDOWN)
@@ -55,12 +56,19 @@ int main(int argc, char* argv[])
 				SDL_GetMouseState(&x, &y);
 				game->MouseButtonDown({x, y});
 			}
+			else if (e.type == SDL_MOUSEBUTTONUP) {
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				game->MouseButtonUp({x, y});
+			}
+			else if (e.type == SDL_QUIT) { running = false; break; }
+
 		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		game->Update();
+		//Pas besoin de update, c'est event based (Ca attend les clicks)
 		game->Draw();
 
 		// Push back buffer to the front buffer

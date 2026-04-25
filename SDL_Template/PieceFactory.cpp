@@ -7,6 +7,8 @@
 #include "Queen.h"
 #include "TransformStructs.h"
 
+//Ca me tentais de creer une factorie je sais pas pourquoi mais c'est plus clean et plus d'abstraction!
+
 PieceFactory::PieceFactory(SDL_Renderer* renderer)
 	: m_renderer(renderer)
 {

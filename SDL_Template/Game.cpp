@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "King.h"
 
+//c'est le constructeur! il initalise automatiquement les pieces a la construction
 Game::Game(SDL_Renderer* renderer)
 	: m_Renderer(renderer)
 	, m_board(new Board(renderer))
@@ -12,6 +13,7 @@ Game::Game(SDL_Renderer* renderer)
 	InitPieces();
 }
 
+//C'est le destructeur!
 Game::~Game()
 {
 	delete m_board;
@@ -20,49 +22,64 @@ Game::~Game()
 	m_pieceFactory = nullptr;
 }
 
-
-void Game::Update()
-{
-
-}
-
+//Ca dessine le board
 void Game::Draw()
 {
 	m_board->Draw();
 }
 
-void Game::MouseMotion(const int& x, const int& y)
+//Ca gere le input vers le board
+void Game::MouseMotion(Vector2 mousePos)
 {
-	m_board->MouseMotion(x, y);
+	m_board->MouseMotion(mousePos);
 }
 
+void Game::MouseButtonUp(Vector2 mousePos) {
+	//rien faire si la partie est fini
+	if (m_gameOver) return;
+
+	Tile* releaseTile = m_board->GetTile(mousePos);
+	if (!releaseTile->IsHighlighted()) m_board->ResetHighlights();
+
+	//OnMouseClick return true si un coup a été joué.
+	if (m_board->DropPiece(mousePos)) {
+		m_whiteToPlay = !m_whiteToPlay;
+		PieceColor turnColor = m_whiteToPlay ? PieceColor::White : PieceColor::Black;
+		if (!m_board->HasAnyLegalMove(turnColor)) {
+			m_gameOver = true;
+			GridPosition kingPos = m_board->FindKingPosition(turnColor);
+			if (m_board->IsSquareAttacked(kingPos, turnColor)) {
+				std::cout << "Checkmate!\n";
+			}
+			else {
+				std::cout << "Stalemate!\n";
+			}
+		}
+	} 
+}
+
+//Ca te laisse seulement cliquer sur les tuiles qui sont pas deja highlight. c'est principalement pour la selection de piece qui est gere dans le board
 void Game::MouseButtonDown(Vector2 mousePos)
 {
-	Tile* tile = m_board->GetTile(mousePos);
-	Piece* p = tile->GetOccupyingPiece();
-
-	if (!tile->IsHighlighted()) {
-		if (p != nullptr && !IsCorrectTurn(p)) return;
-		if (m_whiteToPlay && KingIsInCheck(m_whiteKing) || !m_whiteToPlay && KingIsInCheck(m_blackKing)) {
-			if (dynamic_cast<King*>(p) == nullptr) {
-				std::cout << (m_whiteToPlay ? "White's " : "Black's ") << "king is in check. Please step away from the check.\n";
-				return;
-			};
-		}
+	if (m_gameOver) {
+		std::cout << "Game has ended. please exit the program.\n";
+		return;
 	}
-
-	if (m_board->MouseButtonDown(mousePos)) m_whiteToPlay = !m_whiteToPlay;
-
+	Tile* clickedTile = m_board->GetTile(mousePos);
+	Piece* clickedPiece = clickedTile->GetOccupyingPiece();
+	if (!clickedTile->IsHighlighted()) {
+		if (clickedPiece != nullptr && !IsCorrectTurn(clickedPiece)) return;
+	}
+	else return;
+	m_board->SelectPiece(mousePos);
 }
 
+//C'est pour rendre le code plus lisible. Le nom est self explanatory.
 bool Game::IsCorrectTurn(Piece* p) {
 	return ((p->GetPieceColor() == White && m_whiteToPlay) || (p->GetPieceColor() == Black && !m_whiteToPlay));
 }
 
-bool Game::KingIsInCheck(Piece* king) {
-	return m_board->IsSquareAttacked(king->GetPosition(), king->GetPieceColor());
-}
-
+//Ca place toutes les pieces de chaque couleurs.
 void Game::InitPieces()
 {
 	//Pawns
@@ -73,10 +90,10 @@ void Game::InitPieces()
 		}
 	}
 	//Kings
-	m_blackKing = m_pieceFactory->CreateKing({ 4, 0 }, Black, TILE_SIZE);
+	m_blackKing = dynamic_cast<King*>(m_pieceFactory->CreateKing({ 4, 0 }, Black, TILE_SIZE));
 	m_board->AssignPiece(m_blackKing->GetPosition(), m_blackKing);
 
-	m_whiteKing = m_pieceFactory->CreateKing({ 4, 7 }, White, TILE_SIZE);
+	m_whiteKing = dynamic_cast<King*>(m_pieceFactory->CreateKing({ 4, 7 }, White, TILE_SIZE));
 	m_board->AssignPiece(m_whiteKing->GetPosition(), m_whiteKing);
 
 	//Knights
